@@ -34,7 +34,6 @@ from .data_source import memes
 from .depends import split_msg, regex
 from .manager import meme_manager, ActionResult, MemeMode
 
-
 __plugin_meta__ = PluginMetadata(
     name="头像表情包",
     description="摸头等头像相关表情制作",
@@ -47,6 +46,8 @@ __plugin_meta__ = PluginMetadata(
         "version": "0.3.16",
     },
 )
+
+
 
 PERM_EDIT = GROUP_ADMIN | GROUP_OWNER | PRIVATE_FRIEND | SUPERUSER
 PERM_GLOBAL = SUPERUSER
@@ -75,7 +76,7 @@ def help_image(user_id: str, memes: List[Meme]) -> BytesIO:
     col_num = 3
     num_per_col = math.ceil(len(memes) / col_num)
     for idx in range(0, len(memes), num_per_col):
-        text = cmd_text(memes[idx : idx + num_per_col], start=idx + 1)
+        text = cmd_text(memes[idx: idx + num_per_col], start=idx + 1)
         imgs.append(Text2Image.from_bbcode_text(text, 30).to_image(padding=(20, 10)))
     w = max(sum((img.width for img in imgs)), head.width)
     h = head.height + max((img.height for img in imgs))
@@ -115,7 +116,7 @@ async def _(user_id: str = get_user_id()):
 
 @block_cmd.handle()
 async def _(
-    matcher: Matcher, msg: Message = CommandArg(), user_id: str = get_user_id()
+        matcher: Matcher, msg: Message = CommandArg(), user_id: str = get_user_id()
 ):
     meme_names = msg.extract_plain_text().strip().split()
     if not meme_names:
@@ -136,7 +137,7 @@ async def _(
 
 @unblock_cmd.handle()
 async def _(
-    matcher: Matcher, msg: Message = CommandArg(), user_id: str = get_user_id()
+        matcher: Matcher, msg: Message = CommandArg(), user_id: str = get_user_id()
 ):
     meme_names = msg.extract_plain_text().strip().split()
     if not meme_names:
@@ -196,9 +197,9 @@ async def _(matcher: Matcher, msg: Message = CommandArg()):
 def create_matchers():
     def handler(meme: Meme) -> T_Handler:
         async def handle(
-            matcher: Matcher,
-            flag: Literal[True] = check_flag(meme),
-            res: Union[str, BytesIO] = Depends(meme.func),
+                matcher: Matcher,
+                flag: Literal[True] = check_flag(meme),
+                res: Union[str, BytesIO] = Depends(meme.func),
         ):
             if not flag:
                 return
